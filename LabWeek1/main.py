@@ -40,13 +40,15 @@ df = spark.read.options(inferSchema=True, header=True).csv("/content/sample_data
 df.printSchema()
 
 
-# To work with the data using a Delta Lake, we first need to create our database:
+# To work with the data using a Delta Table, we first need to create our Spark database:
 spark.sql("create database id2221")
 spark.sql("use id2221")
 
 # Next we can write to the (currently empty) database, but we write data in the "delta lake" format.
 # write csv data as deltap
 df.write.mode("overwrite").format("delta").save("id2221/df_delta")
+# If I understand it correctly, the data from "california_housing_train.csv" is now stored not as a regular "table", but as a file system/directory from the path "id2221".
+# So there is now a folder called "id2221", in which there is a folder called "df_delta" which in turn contains all the data in "delta table" format along with the delta log.
 
 # Then we can read from the delta lake database table.
 #read delta table
